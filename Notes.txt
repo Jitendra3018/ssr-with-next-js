@@ -1,0 +1,6 @@
+Benefits of Server Side Rendering -->
+
+1. Faster Page Loading
+2. Faster Page Rendering
+3. Less Time to Interact (User comes to the page and can interact to the page immediately)
+4. Better SEO Performance
