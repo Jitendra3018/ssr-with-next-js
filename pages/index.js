@@ -3,22 +3,35 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
-export default function Home() {
-	const [todos, setTodos] = useState([]);
+// When we are doing the server side rendering, simply go ahead and include a special function called getServerSideProps. If we simply include this function and then we export it from out component, then the Next JS know to handle this specific page as a server side rended page.
+export async function getServerSideProps() {
+	const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+	const data = await res.json();
 
-	useEffect(() => {
-		setTimeout(() => {
-			const fetchTodos = async () => {
-				const res = await fetch(
-					"https://jsonplaceholder.typicode.com/todos"
-				);
-				const data = await res.json();
-				console.log(data);
-				setTodos(data);
-			};
-			fetchTodos();
-		}, 3000);
-	}, []);
+	return {
+		props: {
+			todos: data,
+		},
+	};
+}
+
+export default function Home({ todos }) {
+	// This is the normal way to do the fetching of the data from the api and showing it on the web page with some timeout (from line 8 to 22)
+	// const [todos, setTodos] = useState([]);
+
+	// useEffect(() => {
+	// 	setTimeout(() => {
+	// 		const fetchTodos = async () => {
+	// 			const res = await fetch(
+	// 				"https://jsonplaceholder.typicode.com/todos"
+	// 			);
+	// 			const data = await res.json();
+	// 			console.log(data);
+	// 			setTodos(data);
+	// 		};
+	// 		fetchTodos();
+	// 	}, 3000);
+	// }, []);
 
 	return (
 		<div className={styles.container}>
@@ -31,10 +44,10 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			{todos.length === 0 ? (
+			{todos?.length === 0 ? (
 				<div>Loading...</div>
 			) : (
-				todos.map((todo) => (
+				todos?.map((todo) => (
 					<div key={todo.id}>
 						<p>
 							{todo.id}: {todo.title}
